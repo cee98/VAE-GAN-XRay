@@ -1,3 +1,40 @@
+#application of weight initialization for Convolutional and Batch Normalization layers
+def weights_init(m):
+
+    """
+    Initialize the weights for Convolutional and Batch Normalization layers.
+
+    This function initializes the weights of Convolutional layers with a normal distribution,
+    where the mean is set to 0 and the standard deviation is set to 0.02. For Batch Normalization
+    layers, it initializes the weight with a normal distribution (mean=1.0, std=0.02) and sets
+    the bias to zero.
+
+    Args:
+        m (torch.nn.Module): The module whose weights need to be initialized.
+    """
+
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        #initializes the weights of the Convolutional layer- normal distribution, mean = 0, standard deviation = 0.02.
+        # weights of the layer set to random values with this distribution
+        nn.init.normal_(m.weight.data, 0.0, 0.02)
+    elif classname.find('BatchNorm') != -1:
+        nn.init.normal_(m.weight.data, 1.0, 0.02)
+        nn.init.constant_(m.bias.data, 0)
+
+class AutoEncoder(nn.Module):
+    def __init__(self, latent_dim=128, hidden_dim=512):
+        super(AutoEncoder, self).__init__()
+        self.fc1 = nn.Linear(latent_dim, hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, latent_dim)
+        self.relu = nn.LeakyReLU(0.2)
+
+    def forward(self, z):
+        z = self.relu(self.fc1(z))
+        z = self.fc2(z)
+        return z
+
+
 class VAE_GAN(nn.Module):
 
     """
