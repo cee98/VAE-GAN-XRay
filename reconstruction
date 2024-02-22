@@ -1,0 +1,17 @@
+# Define the directory where the final model checkpoints are saved
+checkpoint_dir = '/content/drive/MyDrive/ImagesHands/best_model/'
+
+
+# Load the saved model checkpoints
+gen.encoder.load_state_dict(torch.load(os.path.join(checkpoint_dir, 'encoder_best.pt')))
+gen.decoder.load_state_dict(torch.load(os.path.join(checkpoint_dir, 'decoder_best.pt')))
+discriminator.load_state_dict(torch.load(os.path.join(checkpoint_dir, 'discriminator_best.pt')))
+encoder_optimiser.load_state_dict(torch.load(os.path.join(checkpoint_dir, 'encoder_optimiser_best.pt')))
+decoder_optimiser.load_state_dict(torch.load(os.path.join(checkpoint_dir, 'decoder_optimiser_best.pt')))
+discrim_optimiser.load_state_dict(torch.load(os.path.join(checkpoint_dir, 'discrim_optimiser_best.pt')))
+
+test_batch = next(iter(test_loader))
+test_batch = test_batch / 255.0
+print(test_batch.size())
+
+load_save_img("test" ,make_grid((test_batch[0]*0.5+0.5).cpu(),4))
